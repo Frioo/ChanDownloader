@@ -15,6 +15,7 @@ namespace ChanDownloader.Sample
             while(true)
             {
                 ShowMenu().GetAwaiter().GetResult();
+                _iterator = 1;
             }
         }
 
@@ -43,7 +44,6 @@ namespace ChanDownloader.Sample
 
             Console.WriteLine($"{Environment.NewLine}Press any key to continue");
             Console.ReadKey(true);
-            _iterator = 1;
         }
 
         private static void WebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
