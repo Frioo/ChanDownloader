@@ -8,6 +8,7 @@ namespace ChanDownloader.Console
     class Program
     {
         private static Downloader downloader = new Downloader();
+        private static Thread _thread;
 
         static void Main(string[] args)
         {
@@ -20,25 +21,32 @@ namespace ChanDownloader.Console
 
         private static async Task ShowMenu()
         {
-            System.Console.Clear();
-            System.Console.Write("Thread: ");
-            var url = System.Console.ReadLine();
+            var url = PromptUrl();
+            while (string.IsNullOrEmpty(url)) url = PromptUrl();
             System.Console.Write("Path (may not exist; leave empty for working directory): ");
             var path = System.Console.ReadLine();
 
             System.Console.WriteLine("> loading thread");
-            await downloader.LoadThread(url);
+            _thread = await downloader.LoadThread(url);
 
-            System.Console.Title = $"Chan Downloader - {downloader.GetThreadTitle()}";
+            if(_thread == null)
+            {
+                Utils.Log("Error loading thread");
+                System.Console.WriteLine("> error loading thread");
+                System.Console.ReadKey(true);
+                return;
+            }
 
-            var files = downloader.GetFileList();
-            System.Console.WriteLine($"> found {files.Count} files {Environment.NewLine}");
-            for (int i = 0; i < files.Count; i++) System.Console.WriteLine($"* {files[i].OriginalFileName}");
+            System.Console.Title = $"Chan Downloader - {_thread.Subject}";
 
-            System.Console.WriteLine($"{Environment.NewLine}Press any key to begin download");
+            var files = _thread.Files;
+            for (int i = 0; i < files.Count; i++) System.Console.WriteLine($"* {files[i].OriginalFileName} ({Math.Round(files[i].FileSize / 1024.0 / 1024.0, 2)}MiB)");
+            System.Console.WriteLine($"{Environment.NewLine}> found {files.Count} files {Environment.NewLine}");
+
+            System.Console.WriteLine("Press any key to begin download");
             System.Console.ReadKey(true);
 
-            if (path.Equals(string.Empty)) path = $"{Directory.GetCurrentDirectory()}\\{Utils.GetSafeFilename(downloader.GetThreadTitle())}";
+            if (path.Equals(string.Empty)) path = $"{Directory.GetCurrentDirectory()}\\{_thread.SemanticSubject}";
             Directory.CreateDirectory(path);
 
             downloader.WebClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
@@ -50,7 +58,13 @@ namespace ChanDownloader.Console
 
         private static void WebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            System.Console.Write($"\r> downloaded {downloader.CurrentFileNumber} / {downloader.GetFileList().Count}");
+            System.Console.Write($"\r> downloaded {downloader.CurrentFileNumber} / {_thread.Files.Count}");
+        }
+
+        private static string PromptUrl()
+        {
+            System.Console.Write("Thread: ");
+            return System.Console.ReadLine();
         }
     }
 
@@ -59,13 +73,6 @@ namespace ChanDownloader.Console
         public static void Log(string text)
         {
             Debug.WriteLine($"ChanDownloader-log: {text}");
-        }
-
-        public static string GetSafeFilename(string filename)
-        {
-
-            return string.Join("", filename.Split(Path.GetInvalidFileNameChars()));
-
         }
     }
 }
