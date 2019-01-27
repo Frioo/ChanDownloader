@@ -1,38 +1,49 @@
 ﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace ChanDownloader
 {
     public class Downloader
     {
         public WebClient WebClient = new WebClient();
+        public int CurrentFileNumber = 1;
         private Thread _thread;
+        private const string api_url = @"https://a.4cdn.org/";
+        private const string api_img_url = @"https://i.4cdn.org/";
 
         public async Task LoadThread(string url)
         {
-            var doc = new HtmlDocument();
-            Utils.Log("LoadThread: downloading html");
-            doc.LoadHtml(await WebClient.DownloadStringTaskAsync(url));
-
             Utils.Log("LoadThread: extracting info");
-            var subject = doc.DocumentNode
-                .SelectSingleNode("//head/title").InnerText;
+            //turn http://boards.4chan.org/<board>/thread/<id>/<sometimes_title> into <board>/thread/<id>
+            var endpoint = string.Join("/", url.Remove(0, url.LastIndexOf('.')).Split('/'), 1, 3);
+            Utils.Log($"api url: {api_url}{endpoint}");
 
-            var id = doc.DocumentNode
-                .SelectSingleNode("//div[contains(@class, 'postInfo')]/input[contains(@type, 'checkbox')]").Name;
+            var posts = JObject.Parse(await WebClient.DownloadStringTaskAsync($"{api_url}{endpoint}.json"))["posts"].ToObject<JArray>();
+            if (posts == null) return; // something went wrong ;)
 
-            List<File> files = doc.DocumentNode
-                .SelectNodes("//div[contains(@class,'fileText')]/a")
-                .Select(node => new File(node.InnerText, node.ParentNode.Id, node.GetAttributeValue("href", string.Empty)))
-                .Where(file => !file.Url.Equals(string.Empty))
-                .ToList();
+            var id = posts[0]["no"].ToString();
+            var subject = posts[0]["semantic_url"].ToString();
+            var files = new List<File>();
 
-            this._thread = new Thread(url, id, subject, files, doc);
-            Utils.Log($"Loaded thread: {id} - {subject} ({_thread.Files.Count} files)");
+            for (int i = 0; i < posts.Count; i++)
+            {
+                if (posts[i]["filename"] != null)
+                {
+                    var filename = posts[i]["filename"].ToString() + posts[i]["ext"].ToString();
+                    var renamed = posts[i]["tim"].ToString() + posts[i]["ext"].ToString();
+                    var uri = $"{api_img_url}{endpoint.Split('/').First()}/{renamed}";
+                    files.Add(new File(filename, renamed, uri));
+                }
+            }
+
+            this._thread = new Thread(url, id, subject, files);
+            //Utils.Log($"Loaded thread: {id} - {subject} ({_thread.Files.Count} files)");
         }
 
         public List<File> GetFileList()
@@ -50,9 +61,10 @@ namespace ChanDownloader
             var files = GetFileList();
             for (int i = 0; i < files.Count; i++)
             {
+                this.CurrentFileNumber = i + 1;
                 var current = files[i];
                 var filename = $"{path}\\{current.OriginalFileName}";
-                var uri = $"http:{current.Url}";
+                var uri = $"{current.Url}";
                 Utils.Log($"downloading {uri} to {filename}");
                 await WebClient.DownloadFileTaskAsync(uri, filename);
             }
@@ -66,15 +78,13 @@ namespace ChanDownloader
         public string Id { get; private set; }
         public string Subject { get; private set; }
         public List<File> Files { get; private set; }
-        public HtmlDocument HtmlDocument { get; private set; }
 
-        public Thread(string url, string id, string subject, List<File> files, HtmlDocument doc)
+        public Thread(string url, string id, string subject, List<File> files)
         {
             this.Url = url;
             Id = id;
             Subject = subject;
             Files = files;
-            HtmlDocument = doc;
         }
     }
 

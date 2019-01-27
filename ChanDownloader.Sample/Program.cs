@@ -8,14 +8,13 @@ namespace ChanDownloader.Sample
     class Program
     {
         private static Downloader downloader = new Downloader();
-        private static int _iterator = 1;
 
         static void Main(string[] args)
         {
             while(true)
             {
+                Console.Title = "Chan Downloader";
                 ShowMenu().GetAwaiter().GetResult();
-                _iterator = 1;
             }
         }
 
@@ -27,8 +26,11 @@ namespace ChanDownloader.Sample
             Console.Write("Path (may not exist; leave empty for working directory): ");
             var path = Console.ReadLine();
 
-            Console.WriteLine("> fetching thread");
+            Console.WriteLine("> loading thread");
             await downloader.LoadThread(url);
+
+            Console.Title = $"Chan Downloader - {downloader.GetThreadTitle()}";
+
             var files = downloader.GetFileList();
             Console.WriteLine($"> found {files.Count} files {Environment.NewLine}");
             for (int i = 0; i < files.Count; i++) Console.WriteLine($"* {files[i].OriginalFileName}");
@@ -48,7 +50,7 @@ namespace ChanDownloader.Sample
 
         private static void WebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            Console.Write($"\r> downloaded {_iterator++} / {downloader.GetFileList().Count}");
+            Console.Write($"\r> downloaded {downloader.CurrentFileNumber} / {downloader.GetFileList().Count}");
         }
     }
 
