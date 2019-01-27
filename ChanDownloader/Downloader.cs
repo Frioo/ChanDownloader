@@ -36,9 +36,10 @@ namespace ChanDownloader
                 if (posts[i]["filename"] != null)
                 {
                     var filename = posts[i]["filename"].ToString() + posts[i]["ext"].ToString();
+                    var size = int.Parse(posts[i]["fsize"].ToString());
                     var renamed = posts[i]["tim"].ToString() + posts[i]["ext"].ToString();
                     var uri = $"{api_img_url}{endpoint.Split('/').First()}/{renamed}";
-                    files.Add(new File(filename, renamed, uri));
+                    files.Add(new File(filename, renamed, size, uri));
                 }
             }
 
@@ -92,12 +93,14 @@ namespace ChanDownloader
     {
         public string OriginalFileName { get; private set; }
         public string FileName { get; private set; }
+        public int FileSize { get; private set; }
         public string Url { get; private set; }
 
-        public File(string originalName, string filename, string url)
+        public File(string originalName, string filename, int filesize, string url)
         {
             this.OriginalFileName = originalName;
             this.FileName = filename;
+            this.FileSize = filesize;
             this.Url = url;
         }
     }
