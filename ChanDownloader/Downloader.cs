@@ -28,7 +28,8 @@ namespace ChanDownloader
             if (posts == null) return; // something went wrong ;)
 
             var id = posts[0]["no"].ToString();
-            var subject = posts[0]["semantic_url"].ToString();
+            var subject = posts[0]["sub"].ToString();
+            var semantic = posts[0]["semantic_url"].ToString();
             var files = new List<File>();
 
             for (int i = 0; i < posts.Count; i++)
@@ -43,7 +44,7 @@ namespace ChanDownloader
                 }
             }
 
-            this._thread = new Thread(url, id, subject, files);
+            this._thread = new Thread(url, id, subject, semantic, files);
             Utils.Log($"Loaded thread: {id} - {subject} ({files.Count} files)");
         }
 
@@ -78,13 +79,15 @@ namespace ChanDownloader
         public string Url { get; private set; }
         public string Id { get; private set; }
         public string Subject { get; private set; }
+        public string SemanticSubject { get; private set; }
         public List<File> Files { get; private set; }
 
-        public Thread(string url, string id, string subject, List<File> files)
+        public Thread(string url, string id, string subject, string semantic, List<File> files)
         {
             this.Url = url;
             Id = id;
             Subject = subject;
+            SemanticSubject = semantic;
             Files = files;
         }
     }
