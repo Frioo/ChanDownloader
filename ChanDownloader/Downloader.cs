@@ -17,7 +17,7 @@ namespace ChanDownloader
         private const string api_url = @"https://a.4cdn.org/";
         private const string api_img_url = @"https://i.4cdn.org/";
 
-        public async Task LoadThread(string url)
+        public async Task<Thread> LoadThread(string url)
         {
             Utils.Log("LoadThread: extracting info");
             //turn http://boards.4chan.org/<board>/thread/<id>/<sometimes_title> into <board>/thread/<id>
@@ -25,7 +25,7 @@ namespace ChanDownloader
             Utils.Log($"api url: {api_url}{endpoint}");
 
             var posts = JObject.Parse(await WebClient.DownloadStringTaskAsync($"{api_url}{endpoint}.json"))["posts"].ToObject<JArray>();
-            if (posts == null) return; // something went wrong ;)
+            if (posts == null) return null; // something went wrong ;)
 
             var id = posts[0]["no"].ToString();
             var subject = posts[0]["sub"].ToString();
@@ -44,23 +44,16 @@ namespace ChanDownloader
                 }
             }
 
-            this._thread = new Thread(url, id, subject, semantic, files);
+            var thread = new Thread(url, id, subject, semantic, files);
+            this._thread = thread;
             Utils.Log($"Loaded thread: {id} - {subject} ({files.Count} files)");
-        }
 
-        public List<File> GetFileList()
-        {
-            return _thread.Files;
-        }
-
-        public string GetThreadTitle()
-        {
-            return _thread.Subject;
+            return thread;
         }
 
         public async Task DownloadFiles(string path)
         {
-            var files = GetFileList();
+            var files = _thread.Files;
             for (int i = 0; i < files.Count; i++)
             {
                 this.CurrentFileNumber = i + 1;
