@@ -43,7 +43,7 @@ namespace ChanDownloader
             }
 
             this._thread = new Thread(url, id, subject, files);
-            //Utils.Log($"Loaded thread: {id} - {subject} ({_thread.Files.Count} files)");
+            Utils.Log($"Loaded thread: {id} - {subject} ({files.Count} files)");
         }
 
         public List<File> GetFileList()
