@@ -6,10 +6,14 @@ Grab the latest releases [here](https://github.com/Frioo/ChanDownloader/releases
 ## Chan Downloader - API 
 ### Usage
 ```csharp
-var downloader = new Downloader();          // create new ChanDownloader instance
-var thread = await downloader.LoadThread(<thread_url>);  // load thread
-var subject = thread.Subject;  // get thread subject (safe format)
-var files = thread.Files;       // get the file list
+var downloader = new Downloader();                        // create new ChanDownloader instance
+
+var thread = await downloader.LoadThread(<thread_url>);   // load thread
+
+var id = thread.Id                                        // thread id
+var subject = thread.Subject;                             // get thread subject (original)
+var safeName = thread.SemanticSubject;                    // get thread subject in safe format
+var files = thread.Files;                                 // get the file list
 
 /*
  * the webclient is exposed so you can hook up your event callbacks
