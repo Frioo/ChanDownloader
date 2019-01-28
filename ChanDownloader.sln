@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChanDownloader", "ChanDownl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChanDownloader.Console", "ChanDownloader.Sample\ChanDownloader.Console.csproj", "{70A17206-5539-4C31-885B-0F240A1A4383}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChanDownloader.GUI", "ChanDownloader.GUI\ChanDownloader.GUI.csproj", "{C17CD4E8-F2FA-49A3-9AE6-E38A817AF58E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +23,10 @@ Global
 		{70A17206-5539-4C31-885B-0F240A1A4383}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70A17206-5539-4C31-885B-0F240A1A4383}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70A17206-5539-4C31-885B-0F240A1A4383}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C17CD4E8-F2FA-49A3-9AE6-E38A817AF58E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C17CD4E8-F2FA-49A3-9AE6-E38A817AF58E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C17CD4E8-F2FA-49A3-9AE6-E38A817AF58E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C17CD4E8-F2FA-49A3-9AE6-E38A817AF58E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
