@@ -65,6 +65,20 @@ namespace ChanDownloader
             }
             Utils.Log($"downloaded {files.Count} files to {path}");
         }
+
+        public async Task DownloadFiles(List<File> files, string path)
+        {
+            for (int i = 0; i < files.Count; i++)
+            {
+                this.CurrentFileNumber = i + 1;
+                var current = files[i];
+                var filename = $"{path}\\{current.OriginalFileName}";
+                var uri = $"{current.Url}";
+                Utils.Log($"downloading {uri} to {filename}");
+                await WebClient.DownloadFileTaskAsync(uri, filename);
+            }
+            Utils.Log($"downloaded {files.Count} files to {path}");
+        }
     }
 
     public class Thread
