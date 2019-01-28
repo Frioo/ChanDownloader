@@ -51,9 +51,9 @@ namespace ChanDownloader
             return thread;
         }
 
-        public async Task DownloadFiles(string path)
+        public async Task DownloadFiles(Thread thread, string path)
         {
-            var files = _thread.Files;
+            var files = thread.Files;
             for (int i = 0; i < files.Count; i++)
             {
                 this.CurrentFileNumber = i + 1;
