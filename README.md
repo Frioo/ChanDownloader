@@ -10,7 +10,7 @@ var downloader = new Downloader();                        // create new ChanDown
 
 var thread = await downloader.LoadThread(<thread_url>);   // load thread
 
-var id = thread.Id                                        // thread id
+var id = thread.Id;                                        // thread id
 var subject = thread.Subject;                             // get thread subject (original)
 var safeName = thread.SemanticSubject;                    // get thread subject in safe format
 var files = thread.Files;                                 // get the file list
