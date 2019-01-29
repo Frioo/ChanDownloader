@@ -103,18 +103,24 @@
                 <TextBox x:Name="TextBoxUrl" Grid.Column="0" Grid.Row="0"
                          Controls:TextBoxHelper.Watermark="Thread URL" Controls:TextBoxHelper.ClearTextButton="True" Controls:TextBoxHelper.SelectAllOnFocus="True"/>
 
-                <Button x:Name="ButtonAction" DockPanel.Dock="Bottom"
-                        VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" Margin="4 0 0 0" Click="ButtonAction_Click">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource SquareButtonStyle}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=TextBoxUrl, Path=Text.Length}" Value="0">
-                                    <Setter Property="IsEnabled" Value="False" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
+                <Grid Grid.Column="1" Grid.Row="0" Margin="4 0 0 0">
+                    <Button x:Name="ButtonAction" DockPanel.Dock="Bottom"
+                        VerticalAlignment="Center" Click="ButtonAction_Click">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource SquareButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=TextBoxUrl, Path=Text.Length}" Value="0">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Controls:ProgressRing x:Name="ProgressRing" Height="20" Width="20" Visibility="Hidden">
+
+                    </Controls:ProgressRing>
+                </Grid>
+                
             </Grid>
 
 

@@ -34,6 +34,7 @@ namespace ChanDownloader.GUI
         private async Task LoadThread(string url)
         {
             SetStatus("Loading thread...");
+            ProgressRing.Visibility = Visibility.Visible;
             this._thread = await _downloader.LoadThread(url);
 
             if (_thread == null)
@@ -47,6 +48,7 @@ namespace ChanDownloader.GUI
             _items = new ObservableCollection<FileItem>(_thread.Files.Select(file => new FileItem(file)));
             DataGridFiles.DataContext = _items;
             ButtonAction.Content = Config.Actions.Download;
+            ProgressRing.Visibility = Visibility.Hidden;
             SetStatus($"Loaded thread: {_thread.Id} | {_thread.Files.Count} files - {Utils.Mibibytes(_thread.Files.Sum(file => file.FileSize))} MiB");
             SetTitle(_thread.Subject);
         }
@@ -54,6 +56,7 @@ namespace ChanDownloader.GUI
         private async Task Download()
         {
             SetStatus("Downloading files...");
+            ProgressRing.Visibility = Visibility.Visible;
             var path = $"{Directory.GetCurrentDirectory()}\\{_thread.SemanticSubject}";
             Directory.CreateDirectory(path);
             _downloader.WebClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
@@ -64,7 +67,12 @@ namespace ChanDownloader.GUI
         {
             SetStatus($"Downloading files... {_downloader.CurrentFileNumber} / {_items.Count}");
 
-            if (_downloader.CurrentFileNumber == _items.Count) SetStatus($"Downloaded {_items.Count} files");
+            if (_downloader.CurrentFileNumber == _items.Count)
+            {
+                ProgressRing.Visibility = Visibility.Hidden;
+                SetStatus($"Downloaded {_items.Count} files");
+            }
+
         }
 
         private void SetTitle(string text)
