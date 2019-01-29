@@ -20,14 +20,29 @@ namespace ChanDownloader
             Utils.Log("LoadThread: extracting info");
             //turn http://boards.4chan.org/<board>/thread/<id>/<sometimes_title> into <board>/thread/<id>
             var endpoint = string.Join("/", url.Remove(0, url.LastIndexOf('.')).Split('/'), 1, 3);
-            Utils.Log($"api url: {api_url}{endpoint}");
+            var apiUrl = $"{api_url}{endpoint}.json";
 
-            var posts = JObject.Parse(await WebClient.DownloadStringTaskAsync($"{api_url}{endpoint}.json"))["posts"].ToObject<JArray>();
-            if (posts == null) return null; // something went wrong ;)
+            Utils.Log($"api url: {apiUrl}");
+            var json = await WebClient.DownloadStringTaskAsync($"{api_url}{endpoint}.json");
+
+            if (string.IsNullOrEmpty(json))
+            {
+                // request error
+                Utils.Log("LoadThread: web request returned null");
+                return null; 
+            }
+
+            var posts = JObject.Parse(json)["posts"].ToObject<JArray>();
+            if (posts == null)
+            {
+                // parsing error
+                Utils.Log($"LoadThread: error parsing response\njson:\n{json}");
+                return null;
+            }
 
             var id = posts[0]["no"].ToString();
-            var subject = posts[0]["sub"].ToString();
             var semantic = posts[0]["semantic_url"].ToString();
+            var subject = posts[0]["sub"] == null ? semantic : posts[0]["sub"].ToString();
             var files = new List<File>();
 
             for (int i = 0; i < posts.Count; i++)
