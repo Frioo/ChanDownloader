@@ -28,13 +28,13 @@
         <!-- main toolbar -->
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Tools">
-                <MenuItem Header="Thread saver">
+                <MenuItem Header="Thread saver" IsEnabled="False">
                     <MenuItem.Icon>
                         <iconPacks:PackIconMaterial Kind="ClosedCaption" Style="{StaticResource CenteredIcon}"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="Settings">
+                <MenuItem Header="Settings" IsEnabled="False">
                     <MenuItem.Icon>
                         <iconPacks:PackIconMaterial Kind="Settings" Style="{StaticResource CenteredIcon}"/>
                     </MenuItem.Icon>
@@ -58,12 +58,12 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="Supported sites">
+                <MenuItem Header="Supported sites" IsEnabled="False">
                     <MenuItem.Icon>
                         <iconPacks:PackIconMaterial Kind="Web" Style="{StaticResource CenteredIcon}"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="About">
+                <MenuItem Header="About" IsEnabled="False">
                     <MenuItem.Icon>
                         <iconPacks:PackIconMaterial Kind="Information" Style="{StaticResource CenteredIcon}"/>
                     </MenuItem.Icon>
