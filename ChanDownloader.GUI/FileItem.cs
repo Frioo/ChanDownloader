@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ChanDownloader.GUI
+﻿namespace ChanDownloader.GUI
 {
     public class FileItem
     {
@@ -15,7 +9,7 @@ namespace ChanDownloader.GUI
         public FileItem(File file)
         {
             this.File = file;
-            this.FileSize = $"{Math.Round(file.FileSize / 1024.0 / 1024.0, 2)} MiB";
+            this.FileSize = $"{Utils.Mibibytes(file.FileSize)} MiB";
             this.Selected = true;
         }
     }
