@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChanDownloader", "ChanDownloader\ChanDownloader.csproj", "{85222000-CD6D-402F-AC26-5DE86ED451D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChanDownloader.Console", "ChanDownloader.Sample\ChanDownloader.Console.csproj", "{70A17206-5539-4C31-885B-0F240A1A4383}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChanDownloader.Console", "ChanDownloader.Console\ChanDownloader.Console.csproj", "{70A17206-5539-4C31-885B-0F240A1A4383}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChanDownloader.GUI", "ChanDownloader.GUI\ChanDownloader.GUI.csproj", "{C17CD4E8-F2FA-49A3-9AE6-E38A817AF58E}"
 EndProject
