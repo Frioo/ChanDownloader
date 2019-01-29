@@ -25,6 +25,8 @@ await downloader.DownloadFiles(<your_path>);  // download the files to the speci
 
 ## Chan Downloader - Console
 Simple console program for downloading all images from a specified thread  
+![ChanDownloader.Console](https://raw.githubusercontent.com/Frioo/ChanDownloader/master/screenshots/ChanDownloader.Console.png)
 
 ## Chan Downloader - GUI
-*work in progress*
+GUI program with additional features.    
+![ChanDownloade.GUI](https://raw.githubusercontent.com/Frioo/ChanDownloader/master/screenshots/ChanDownloader.GUI.png)
