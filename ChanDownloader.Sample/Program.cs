@@ -50,7 +50,7 @@ namespace ChanDownloader.Console
             Directory.CreateDirectory(path);
 
             downloader.WebClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
-            await downloader.DownloadFiles(path);
+            await downloader.DownloadFiles(_thread, path);
 
             System.Console.WriteLine($"{Environment.NewLine}Press any key to continue");
             System.Console.ReadKey(true);
