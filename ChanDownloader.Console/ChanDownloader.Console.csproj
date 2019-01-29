@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{70A17206-5539-4C31-885B-0F240A1A4383}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ChanDownloader.Sample</RootNamespace>
-    <AssemblyName>ChanDownloader.Sample</AssemblyName>
+    <RootNamespace>ChanDownloader.Console</RootNamespace>
+    <AssemblyName>ChanDownloader.Console</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
