@@ -153,7 +153,7 @@ namespace ChanDownloader.GUI
             }
             else if (ButtonAction.Content.ToString().Equals(Config.Actions.DownloadQueue))
             {
-                if (Config.Queue.Items.Count > 1)
+                if (Config.Queue.Items.Count != 0)
                 {
                     for (int i = 0; i < Config.Queue.Items.Count; i++)
                     {
