@@ -9,7 +9,7 @@
                                Title="Add task"
                                BorderBrush="{DynamicResource AccentBaseColorBrush}"
                                BorderThickness="1"
-                               ChildWindowWidth="400"
+                               ChildWindowWidth="500"
                                GlowBrush="{DynamicResource AccentColorBrush}"
                                ShowCloseButton="False"
                                mc:Ignorable="d">

@@ -1,6 +1,6 @@
 ﻿using MahApps.Metro.SimpleChildWindow;
-using MahApps.Metro.Controls;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace ChanDownloader.GUI
@@ -22,7 +22,9 @@ namespace ChanDownloader.GUI
 
         private void ButtonSubmit_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.Close(new List<string>(TextBoxUrls.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)));
+            this.Close(new List<string>(TextBoxUrls.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                .Select(url => new QueueItem(url))
+                .ToList());
         }
     }
 }

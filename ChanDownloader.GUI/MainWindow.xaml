@@ -46,7 +46,7 @@
                         <iconPacks:PackIconMaterial Kind="PlaylistPlus" Style="{StaticResource CenteredIcon}"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Clear queue" IsEnabled="False">
+                <MenuItem Header="Clear queue" x:Name="MenuClearQueue" Click="MenuClearQueue_Click">
                     <MenuItem.Icon>
                         <iconPacks:PackIconMaterial Kind="PlaylistRemove" Style="{StaticResource CenteredIcon}"/>
                     </MenuItem.Icon>

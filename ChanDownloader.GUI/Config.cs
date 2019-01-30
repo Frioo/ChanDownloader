@@ -20,7 +20,7 @@ namespace ChanDownloader.GUI
 
         public static class Queue
         {
-            public static ObservableCollection<string> Items = new ObservableCollection<string>();
+            public static ObservableCollection<QueueItem> Items = new ObservableCollection<QueueItem>();
         }
     }
 }

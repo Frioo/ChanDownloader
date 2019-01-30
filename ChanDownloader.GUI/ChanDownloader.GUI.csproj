@@ -82,6 +82,7 @@
     <Compile Include="AddTaskWindow.xaml.cs">
       <DependentUpon>AddTaskWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="QueueItem.cs" />
     <Compile Include="Utils.cs" />
     <Page Include="AddTaskWindow.xaml">
       <SubType>Designer</SubType>

@@ -35,11 +35,12 @@ namespace ChanDownloader.GUI
 
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            ChanDownloader.Utils.Log($"Queue updated: {e.Action} {Config.Queue.Items[e.NewStartingIndex]}");
+            ChanDownloader.Utils.Log($"Queue updated: {e.Action}");
             if (Config.Queue.Items.Count > 1)
             {
                 ButtonAction.IsEnabled = true;
                 ButtonAction.Content = Config.Actions.DownloadQueue;
+                SetStatus($"Queue ready: {Config.Queue.Items.Where(item => !item.IsComplete).Count()} threads");
             }
         }
 
@@ -75,14 +76,37 @@ namespace ChanDownloader.GUI
             await _downloader.DownloadFiles(_items.Where(item => item.Selected).Select(item => item.File).ToList(), path);
         }
 
+        private async Task DownloadQueue()
+        {
+            for (int i = 0; i < Config.Queue.Items.Count; i++)
+            {
+                try
+                {
+                    await LoadThread(Config.Queue.Items[i].ThreadUrl);
+                    await Download();
+                    Config.Queue.Items[i].IsComplete = true;
+                    ChanDownloader.Utils.Log($"Queue item completed: {Config.Queue.Items[i].ThreadUrl}");
+                }
+                catch (Exception ex)
+                {
+                    ChanDownloader.Utils.Log($"Error downloading queue item {Config.Queue.Items[i].ThreadUrl} - {ex.Message}");
+                    ResetState();
+                    SetStatus($"Queue error: invalid URL? '{Config.Queue.Items[i].ThreadUrl}'");
+                }
+            }
+        }
+
         private void WebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            SetStatus($"Downloading files... {_downloader.CurrentFileNumber} / {_items.Count}");
+            var queueTotal = Config.Queue.Items.Count;
+            var queueCompleted = Config.Queue.Items.Where(item => item.IsComplete).Count();
+
+            SetStatus($"Thread {queueCompleted + 1} / {queueTotal} | Downloading files... {_downloader.CurrentFileNumber} / {_items.Count}");
 
             if (_downloader.CurrentFileNumber == _items.Count)
             {
                 ProgressRing.Visibility = Visibility.Hidden;
-                SetStatus($"Downloaded {_items.Count} files");
+                SetStatus($"Thread {queueCompleted + 1} / {queueTotal} | Downloaded {_items.Count} files");
             }
 
         }
@@ -96,6 +120,13 @@ namespace ChanDownloader.GUI
         private void SetStatus(string text)
         {
             StatusBarItem.Content = text;
+        }
+
+        private void ResetState()
+        {
+            ProgressRing.Visibility = Visibility.Hidden;
+            ButtonAction.IsEnabled = false;
+            ButtonAction.Content = Config.Actions.Fetch;
         }
 
 
@@ -116,15 +147,11 @@ namespace ChanDownloader.GUI
             {
                 try
                 {
-                    Config.Queue.Items.Add(TextBoxUrl.Text);
+                    Config.Queue.Items.Add(new QueueItem(TextBoxUrl.Text));
 
                     if (Config.Queue.Items.Count > 1)
                     {
-                        for (int i = 0; i < Config.Queue.Items.Count; i++)
-                        {
-                            await LoadThread(Config.Queue.Items[i]);
-                            await Download();
-                        }
+                        await DownloadQueue();
                     }
                     else
                     {
@@ -134,8 +161,9 @@ namespace ChanDownloader.GUI
                 catch (Exception ex)
                 {
                     ChanDownloader.Utils.Log($"LoadThread call unsuccessful: {ex.Message}");
+                    ResetState();
                     SetStatus("Could not load thread");
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else if (ButtonAction.Content.ToString().Equals(Config.Actions.Download))
@@ -147,6 +175,7 @@ namespace ChanDownloader.GUI
                 catch (Exception ex)
                 {
                     ChanDownloader.Utils.Log($"Download unsuccessful: {ex.Message}");
+                    ResetState();
                     SetStatus("Error downloading files");
                     MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -155,11 +184,7 @@ namespace ChanDownloader.GUI
             {
                 if (Config.Queue.Items.Count != 0)
                 {
-                    for (int i = 0; i < Config.Queue.Items.Count; i++)
-                    {
-                        await LoadThread(Config.Queue.Items[i]);
-                        await Download();
-                    }
+                    await DownloadQueue();
                 }
             }
             
@@ -167,8 +192,15 @@ namespace ChanDownloader.GUI
 
         private async void MenuAddTask_Click(object sender, RoutedEventArgs e)
         {
-            var added = await this.ShowChildWindowAsync<List<string>>(new AddTaskWindow());
-            added.ForEach(url => Config.Queue.Items.Add(url));
+            var added = await this.ShowChildWindowAsync<List<QueueItem>>(new AddTaskWindow());
+            if (added != null) added.ForEach(item => Config.Queue.Items.Add(item));
+        }
+
+        private void MenuClearQueue_Click(object sender, RoutedEventArgs e)
+        {
+            ResetState();
+            SetStatus($"Removed {Config.Queue.Items.Count} threads from queue");
+            Config.Queue.Items.Clear();
         }
     }
 }
