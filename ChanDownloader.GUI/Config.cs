@@ -14,7 +14,8 @@ namespace ChanDownloader.GUI
             public const string Fetch = "Fetch";
             public const string Download = "Download";
             public const string FetchAndDownload = "Fetch and Download";
-            public static List<string> ActionList = new List<string>(new string[] { Fetch, Download, FetchAndDownload });
+            public const string DownloadQueue = "Download queue";
+            public static List<string> ActionList = new List<string>(new string[] { Fetch, Download, FetchAndDownload, DownloadQueue });
         }
 
         public static class Queue

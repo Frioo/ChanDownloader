@@ -36,6 +36,11 @@ namespace ChanDownloader.GUI
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             ChanDownloader.Utils.Log($"Queue updated: {e.Action} {Config.Queue.Items[e.NewStartingIndex]}");
+            if (Config.Queue.Items.Count > 1)
+            {
+                ButtonAction.IsEnabled = true;
+                ButtonAction.Content = Config.Actions.DownloadQueue;
+            }
         }
 
         private async Task LoadThread(string url)
@@ -144,6 +149,17 @@ namespace ChanDownloader.GUI
                     ChanDownloader.Utils.Log($"Download unsuccessful: {ex.Message}");
                     SetStatus("Error downloading files");
                     MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else if (ButtonAction.Content.ToString().Equals(Config.Actions.DownloadQueue))
+            {
+                if (Config.Queue.Items.Count > 1)
+                {
+                    for (int i = 0; i < Config.Queue.Items.Count; i++)
+                    {
+                        await LoadThread(Config.Queue.Items[i]);
+                        await Download();
+                    }
                 }
             }
             
