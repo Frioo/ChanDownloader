@@ -1,0 +1,44 @@
+﻿<simpleChildWindow:ChildWindow x:Class="ChanDownloader.GUI.AddTaskWindow"
+                               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                               xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                               xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                               xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
+                               Title="Add task"
+                               BorderBrush="{DynamicResource AccentBaseColorBrush}"
+                               BorderThickness="1"
+                               ChildWindowWidth="400"
+                               GlowBrush="{DynamicResource AccentColorBrush}"
+                               ShowCloseButton="False"
+                               mc:Ignorable="d">
+
+    <simpleChildWindow:ChildWindow.Icon>
+        <iconPacks:PackIconMaterial Kind="PlaylistPlus" Width="22" Height="22"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource IdealForegroundColorBrush}" />
+    </simpleChildWindow:ChildWindow.Icon>
+
+    <simpleChildWindow:ChildWindow.OverlayBrush>
+        <SolidColorBrush Opacity="0.7" Color="{StaticResource BlackColor}" />
+    </simpleChildWindow:ChildWindow.OverlayBrush>
+
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+            <Label>Enter thread URLs (one per line)</Label>
+            <TextBox x:Name="TextBoxUrls" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="False"
+                     ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     HorizontalAlignment="Stretch" Height="150"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
+            <Button x:Name="ButtonCancel" Content="Cancel" Margin="0 4 0 0" Click="ButtonCancel_Click" />
+            <Button x:Name="ButtonSubmit" Content="Submit" Margin="4 4 0 0" Click="ButtonSubmit_Click" />
+        </StackPanel>
+    </Grid>
+</simpleChildWindow:ChildWindow>

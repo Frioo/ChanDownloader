@@ -41,7 +41,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Queue">
-                <MenuItem Header="Add task" IsEnabled="False">
+                <MenuItem Header="Add task" x:Name="MenuAddTask" Click="MenuAddTask_Click">
                     <MenuItem.Icon>
                         <iconPacks:PackIconMaterial Kind="PlaylistPlus" Style="{StaticResource CenteredIcon}"/>
                     </MenuItem.Icon>
@@ -76,7 +76,7 @@
             <StatusBarItem x:Name="StatusBarItem" Content="Status bar"/>
         </StatusBar>
 
-        <!-- main content -->
+        <!-- Main content -->
         <Grid Margin="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -90,6 +90,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
+            <!-- Top controls -->
             <Grid Grid.ColumnSpan="4" Grid.Row="0" Margin="0 0 0 4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
@@ -116,16 +117,11 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <Controls:ProgressRing x:Name="ProgressRing" Height="20" Width="20" Visibility="Hidden">
-
-                    </Controls:ProgressRing>
+                    <Controls:ProgressRing x:Name="ProgressRing" Height="20" Width="20" Visibility="Hidden" />
                 </Grid>
-                
             </Grid>
 
-
-
-            <!-- Audio options -->
+            <!-- Options -->
             <GroupBox Header="Options" Margin="4" Visibility="Collapsed" Grid.ColumnSpan="4" Grid.Row="1">
                 <StackPanel Orientation="Vertical">
                     <Controls:ToggleSwitch x:Name="SwitchDownloadThumbnails" IsChecked="False" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}">

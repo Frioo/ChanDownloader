@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MahApps.Metro.SimpleChildWindow;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -27,8 +28,14 @@ namespace ChanDownloader.GUI
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ChanDownloader.Utils.Log("MainWindow: loaded");
+            Config.Queue.Items.CollectionChanged += Items_CollectionChanged;
             ButtonAction.Content = Config.Actions.Fetch;
             SetStatus("Ready");
+        }
+
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            ChanDownloader.Utils.Log($"Queue updated: {e.Action} {Config.Queue.Items[e.NewStartingIndex]}");
         }
 
         private async Task LoadThread(string url)
@@ -75,6 +82,7 @@ namespace ChanDownloader.GUI
 
         }
 
+
         private void SetTitle(string text)
         {
             this.Title = $"Chan Downloader - {text}";
@@ -84,6 +92,7 @@ namespace ChanDownloader.GUI
         {
             StatusBarItem.Content = text;
         }
+
 
         private void CheckBoxAutoDownload_Checked(object sender, RoutedEventArgs e)
         {
@@ -102,7 +111,20 @@ namespace ChanDownloader.GUI
             {
                 try
                 {
-                    await LoadThread(TextBoxUrl.Text);
+                    Config.Queue.Items.Add(TextBoxUrl.Text);
+
+                    if (Config.Queue.Items.Count > 1)
+                    {
+                        for (int i = 0; i < Config.Queue.Items.Count; i++)
+                        {
+                            await LoadThread(Config.Queue.Items[i]);
+                            await Download();
+                        }
+                    }
+                    else
+                    {
+                        await LoadThread(TextBoxUrl.Text);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -119,10 +141,18 @@ namespace ChanDownloader.GUI
                 }
                 catch (Exception ex)
                 {
-
+                    ChanDownloader.Utils.Log($"Download unsuccessful: {ex.Message}");
+                    SetStatus("Error downloading files");
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             
+        }
+
+        private async void MenuAddTask_Click(object sender, RoutedEventArgs e)
+        {
+            var added = await this.ShowChildWindowAsync<List<string>>(new AddTaskWindow());
+            added.ForEach(url => Config.Queue.Items.Add(url));
         }
     }
 }
